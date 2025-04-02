@@ -1,6 +1,6 @@
 rule:
   meta:
-    name: register Task in Task Scheduler via TaskService
+    name: schedule task via taskschd
     namespace: persistence/scheduled-tasks
     authors:
       - kevinru2005@gmail.com
@@ -9,23 +9,20 @@ rule:
       static: function
       dynamic: span of calls
     att&ck:
-      Persistence::Schedule Task/Job::Scheduled Task [T1053.005]
+      - Persistence::Scheduled Task/Job::Scheduled Task [T1053.005]
     references:
       - https://learn.microsoft.com/en-us/windows/win32/taskschd/taskservice
       - https://learn.microsoft.com/en-us/windows/win32/taskschd/taskfolder-registertaskdefinition
-    examples: 
-      - 1c444ebeba24dcba8628b7dfe5fec7c6.exe_
-      - 
+    examples:
   features:
-    - and: 
+    - and:
       - or:
-        string: Schedule.Service  
-        api: Taskschd.dll
-        api: TaskService.Connect
-        api: TaskFolder.RegisterTaskDefinition
-      - or: 
-        number: 0x2 = TASK_CREATE
-        number: 0x4 = TASK_UPDATE
-        number: 0x6 = TASK_CREATE_OR_UPDATE
-        number: 0x20 = TASK_IGNORE_REGISTRATION_TRIGGERS
-            
+        - string: "Schedule.Service"
+        - api: Taskschd.dll
+        - api: TaskService.Connect
+        - api: TaskFolder.RegisterTaskDefinition
+      - or:
+        - number: 0x2 = TASK_CREATE
+        - number: 0x4 = TASK_UPDATE
+        - number: 0x6 = TASK_CREATE_OR_UPDATE
+        - number: 0x20 = TASK_IGNORE_REGISTRATION_TRIGGERS
